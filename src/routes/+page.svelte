@@ -3,7 +3,9 @@
 	import { onMount } from 'svelte';
 	import { PUBLIC_OBA_LOGO_URL, PUBLIC_OBA_REGION_NAME } from '$env/static/public';
 
-	let arrivalsAndDepartures = $state([]);
+    let arrivalsAndDepartures = $state([]);
+    let stopName = $state("Loading stop information...");
+    let stopCode = $state("");
 
 	// TODO: this was copied and pasted from Wayfinder. Unify them.
 	function getArrivalStatus(predictedTime, scheduledTime) {
@@ -21,12 +23,32 @@
 		}
 	}
 
-	onMount(async () => {
-		if (browser) {
-			const response = await fetch('/api/oba/departures');
-			arrivalsAndDepartures = await response.json();
-		}
-	});
+    async function fetchStopInfo(id) {
+        try {
+            const response = await fetch(`api/oba/stops`);
+            if (!response.ok) throw new Error('Failed to fetch stop information');
+            const data = await response.json();
+            if (data ) {
+                stopName = data.name;
+                stopCode = data.code;
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error fetching stop information:', error);
+            stopName = "Unknown Stop";
+            return false;
+        }
+    }
+
+    onMount(async () => {
+        if (browser) {
+            const response = await fetch('/api/oba/departures');
+            arrivalsAndDepartures = await response.json();
+
+            await fetchStopInfo(stopCode);
+        }
+    });
 </script>
 
 <div class="flex h-screen flex-col bg-red-100">
@@ -47,8 +69,8 @@
 
 	{#if arrivalsAndDepartures.length > 0}
 		<div class="flex flex-col gap-y-2">
-			{#each arrivalsAndDepartures as dep, i (i)}
-				<div class="flex gap-x-4 bg-red-100 px-2">
+			{#each arrivalsAndDepartures as dep}
+				<div class="flex gap-x-4 px-2">
 					<div>
 						<h2 class="text-5xl">{dep.routeShortName}</h2>
 					</div>
@@ -64,4 +86,15 @@
 	{:else}
 		<p>Loading...</p>
 	{/if}
+
+    <div class="bg-gray-300 p-3 text-black">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-sm ml-2">[Code:{stopCode}]</span>
+            </div>
+            <div class="text-sm">
+                Stop No. {stopCode} - {stopName}
+            </div>
+        </div>
+    </div>
 </div>
