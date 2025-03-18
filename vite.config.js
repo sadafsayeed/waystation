@@ -41,17 +41,11 @@ export default defineConfig({
 			}
 		],
 		coverage: {
-			provider: 'v8',  
-			reporter: ['html', 'lcov'], 
-			reportsDirectory: './coverage',  
-			all: true, 
-			exclude: [
-			  '**/tests',
-			  '.svelte-kit',
-			  'build',
-			  'coverage',
-			  'node_modules'
-			]
-		  }
+			provider: 'v8',
+			reporter: ['html', 'lcov'],
+			reportsDirectory: './coverage',
+			all: true,
+			exclude: ['**/tests', '.svelte-kit', 'build', 'coverage', 'node_modules']
+		}
 	}
 });
