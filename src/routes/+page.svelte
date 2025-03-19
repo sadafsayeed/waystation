@@ -2,14 +2,12 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { PUBLIC_OBA_LOGO_URL, PUBLIC_OBA_REGION_NAME } from '$env/static/public';
+
 	import Header from '$components/navigation/header.svelte';
+	import Footer from '$components/navigation/footer.svelte';
 
 	let arrivalsAndDepartures = $state([]);
-	let stopName = $state('Loading stop information...');
-	let stopCode = $state('');
 	let loading = $state(true);
-
-	// TODO: this was copied and pasted from Wayfinder. Unify them.
 
 	// Calculate arrival time in minutes
 	function getArrivalStatus(predictedTime, scheduledTime) {
@@ -43,25 +41,6 @@
 		});
 	}
 
-	// Fetch stop information using the OneBusAway API
-	async function fetchStopInfo() {
-		try {
-			const response = await fetch(`api/oba/stops`);
-			if (!response.ok) throw new Error('Failed to fetch stop information');
-			const data = await response.json();
-			if (data) {
-				stopName = data.name;
-				stopCode = data.code;
-				return true;
-			}
-			return false;
-		} catch (error) {
-			console.error('Error fetching stop information:', error);
-			stopName = 'Unknown Stop';
-			return false;
-		}
-	}
-
 	// Fetch departures for the stop
 	async function fetchDepartures() {
 		loading = true;
@@ -79,8 +58,6 @@
 
 	onMount(async () => {
 		if (browser) {
-			// Fetch stop information and then departures
-			await fetchStopInfo();
 			await fetchDepartures();
 		}
 	});
@@ -127,15 +104,5 @@
 		{/if}
 	</div>
 
-	<!-- Footer -->
-	<div class="bg-gray-300 p-3 text-black">
-		<div class="flex items-center justify-between">
-			<div class="flex items-center">
-				<span class="ml-2 text-sm">Waystation by Open Transit Software Foundation</span>
-			</div>
-			<div class="text-sm">
-				Stop No. {stopCode} - {stopName}
-			</div>
-		</div>
-	</div>
+	<Footer />
 </div>
