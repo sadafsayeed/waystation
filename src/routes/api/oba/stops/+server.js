@@ -4,10 +4,10 @@ import { json } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ params }) {
-    const stopID = stopIDs()[0]; 
-    const response = await oba.stop.retrieve(stopID);
-    return json({
-        name: response.data.entry.name,
-        code: response.data.entry.code
-    });
+	const stopID = stopIDs()[0];
+	const response = await oba.stop.retrieve(stopID);
+	return json({
+		name: response.data.entry.name,
+		code: response.data.entry.code
+	});
 }
