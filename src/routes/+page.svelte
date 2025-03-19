@@ -1,6 +1,7 @@
 <script>
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import { PUBLIC_OBA_LOGO_URL, PUBLIC_OBA_REGION_NAME } from '$env/static/public';
 	import Header from '$components/navigation/header.svelte';
 
 	let arrivalsAndDepartures = $state([]);
@@ -86,7 +87,7 @@
 </script>
 
 <div class="flex h-screen flex-col">
-	<Header />
+	<Header title={PUBLIC_OBA_REGION_NAME} imageUrl={PUBLIC_OBA_LOGO_URL} />
 
 	<!-- Main content -->
 	<div class="flex-1 bg-gray-200 text-black">

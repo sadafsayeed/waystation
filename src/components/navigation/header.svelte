@@ -1,8 +1,9 @@
 <script>
-	import { PUBLIC_OBA_LOGO_URL, PUBLIC_OBA_REGION_NAME } from '$env/static/public';
 	import { formatDate, formatTime } from '$lib/formatters.js';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+
+	let { title, imageUrl } = $props();
 
 	let currentTime = $state(new Date());
 	let currentDate = $state(new Date());
@@ -27,10 +28,10 @@
 	<div class="flex w-full justify-between gap-4 px-2 py-2 md:w-auto">
 		<div class="flex items-center justify-center gap-x-2">
 			<a href="/" class="block">
-				<img src={PUBLIC_OBA_LOGO_URL} alt="Homepage" class="h-10 rounded-sm" />
+				<img src={imageUrl} alt="Homepage" class="h-10 rounded-sm" />
 			</a>
 			<a href="/" class="block text-xl font-extrabold">
-				{PUBLIC_OBA_REGION_NAME}
+				{title}
 			</a>
 		</div>
 	</div>
