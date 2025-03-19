@@ -117,19 +117,19 @@
 	});
 </script>
 
-<div class="flex h-screen flex-col bg-red-100">
-	<div class="mb-4 flex gap-x-4 bg-slate-50 p-2">
+<div class="flex h-screen flex-col">
+	<div class="flex gap-x-4 p-2">
 		<div class="flex w-full justify-between gap-4 px-2 py-2 md:w-auto">
 			<div class="flex items-center justify-center gap-x-2">
 				<a href="/" class="block">
-					<img src={PUBLIC_OBA_LOGO_URL} alt="OneBusAway" class="h-10 rounded-sm" />
+					<img src={PUBLIC_OBA_LOGO_URL} alt="Homepage" class="h-10 rounded-sm" />
 				</a>
 				<a href="/" class="block text-xl font-extrabold">
 					{PUBLIC_OBA_REGION_NAME}
 				</a>
 			</div>
 		</div>
-		<div class="text-right">
+		<div class="flex-1 text-right">
 			<div class="text-sm">{formatDate(currentDate)}</div>
 			<div class="text-3xl font-bold">{formatTime(currentTime)}</div>
 		</div>
@@ -144,11 +144,9 @@
 		{:else if arrivalsAndDepartures.length > 0}
 			<div class="flex flex-col divide-y divide-gray-300">
 				{#each arrivalsAndDepartures as dep}
-					<div class="flex items-center p-4">
-						<div
-							class="mr-4 flex h-12 w-12 items-center justify-center rounded bg-gray-800 text-white"
-						>
-							<span class="text-2xl font-bold">{dep.routeShortName}</span>
+					<div class="flex items-center gap-x-4 p-4">
+						<div class="rounded-lg bg-gray-800 p-4 text-2xl font-bold text-white">
+							{dep.routeShortName}
 						</div>
 						<div class="flex-1 text-xl">
 							{dep.tripHeadsign}
