@@ -3,24 +3,11 @@
 	import { onMount } from 'svelte';
 	import { PUBLIC_OBA_LOGO_URL, PUBLIC_OBA_REGION_NAME } from '$env/static/public';
 
+	import Header from '$components/navigation/header.svelte';
+	import Footer from '$components/navigation/footer.svelte';
+
 	let arrivalsAndDepartures = $state([]);
-	let currentTime = $state(new Date());
-	let currentDate = $state(new Date());
-	let stopName = $state('Loading stop information...');
-	let stopCode = $state('');
 	let loading = $state(true);
-
-	// TODO: this was copied and pasted from Wayfinder. Unify them.
-
-	// Update current time every second
-	function startClock() {
-		const timer = setInterval(() => {
-			currentTime = new Date();
-			currentDate = new Date();
-		}, 1000);
-
-		return () => clearInterval(timer);
-	}
 
 	// Calculate arrival time in minutes
 	function getArrivalStatus(predictedTime, scheduledTime) {
@@ -36,25 +23,6 @@
 		} else {
 			return Math.abs(Math.floor(predictedDiff / 60000));
 		}
-	}
-
-	// Format time for display
-	function formatTime(date) {
-		return date.toLocaleTimeString('en-US', {
-			hour: 'numeric',
-			minute: '2-digit',
-			second: '2-digit', // Add this line to show seconds
-			hour12: true
-		});
-	}
-
-	// Format date for display
-	function formatDate(date) {
-		return date.toLocaleDateString('en-US', {
-			weekday: 'long',
-			month: 'long',
-			day: 'numeric'
-		});
 	}
 
 	// Check if the departure is coming soon (within minutes) or if it's a scheduled time
@@ -73,27 +41,8 @@
 		});
 	}
 
-	// Fetch stop information using the OneBusAway API
-	async function fetchStopInfo(id) {
-		try {
-			const response = await fetch(`api/oba/stops`);
-			if (!response.ok) throw new Error('Failed to fetch stop information');
-			const data = await response.json();
-			if (data) {
-				stopName = data.name;
-				stopCode = data.code;
-				return true;
-			}
-			return false;
-		} catch (error) {
-			console.error('Error fetching stop information:', error);
-			stopName = 'Unknown Stop';
-			return false;
-		}
-	}
-
 	// Fetch departures for the stop
-	async function fetchDepartures(id = stopCode) {
+	async function fetchDepartures() {
 		loading = true;
 		try {
 			const response = await fetch(`/api/oba/departures`);
@@ -109,31 +58,13 @@
 
 	onMount(async () => {
 		if (browser) {
-			startClock();
-			// Fetch stop information and then departures
-			await fetchStopInfo(stopCode);
 			await fetchDepartures();
 		}
 	});
 </script>
 
 <div class="flex h-screen flex-col">
-	<div class="flex gap-x-4 p-2">
-		<div class="flex w-full justify-between gap-4 px-2 py-2 md:w-auto">
-			<div class="flex items-center justify-center gap-x-2">
-				<a href="/" class="block">
-					<img src={PUBLIC_OBA_LOGO_URL} alt="Homepage" class="h-10 rounded-sm" />
-				</a>
-				<a href="/" class="block text-xl font-extrabold">
-					{PUBLIC_OBA_REGION_NAME}
-				</a>
-			</div>
-		</div>
-		<div class="flex-1 text-right">
-			<div class="text-sm">{formatDate(currentDate)}</div>
-			<div class="text-3xl font-bold">{formatTime(currentTime)}</div>
-		</div>
-	</div>
+	<Header title={PUBLIC_OBA_REGION_NAME} imageUrl={PUBLIC_OBA_LOGO_URL} />
 
 	<!-- Main content -->
 	<div class="flex-1 bg-gray-200 text-black">
@@ -143,7 +74,7 @@
 			</div>
 		{:else if arrivalsAndDepartures.length > 0}
 			<div class="flex flex-col divide-y divide-gray-300">
-				{#each arrivalsAndDepartures as dep}
+				{#each arrivalsAndDepartures as dep (dep.tripId)}
 					<div class="flex items-center gap-x-4 p-4">
 						<div class="rounded-lg bg-gray-800 p-4 text-2xl font-bold text-white">
 							{dep.routeShortName}
@@ -173,15 +104,5 @@
 		{/if}
 	</div>
 
-	<!-- Footer -->
-	<div class="bg-gray-300 p-3 text-black">
-		<div class="flex items-center justify-between">
-			<div class="flex items-center">
-				<span class="ml-2 text-sm">Waystation by Open Transit Software Foundation</span>
-			</div>
-			<div class="text-sm">
-				Stop No. {stopCode} - {stopName}
-			</div>
-		</div>
-	</div>
+	<Footer />
 </div>
