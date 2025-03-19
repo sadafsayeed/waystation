@@ -4,11 +4,25 @@
 	import { PUBLIC_OBA_LOGO_URL, PUBLIC_OBA_REGION_NAME } from '$env/static/public';
 
     let arrivalsAndDepartures = $state([]);
+    let currentTime = $state(new Date());
+    let currentDate = $state(new Date());
     let stopName = $state("Loading stop information...");
     let stopCode = $state("");
     let loading = $state(true);
-    
+
     // TODO: this was copied and pasted from Wayfinder. Unify them.
+
+    // Update current time every second
+    function startClock() {
+        const timer = setInterval(() => {
+            currentTime = new Date();
+            currentDate = new Date();
+        }, 1000);
+        
+        return () => clearInterval(timer);
+    }
+
+    // Calculate arrival time in minutes
     function getArrivalStatus(predictedTime, scheduledTime) {
 		const now = new Date();
 		const predicted = new Date(predictedTime);
@@ -16,7 +30,7 @@
 
 		const predictedDiff = predicted - now;
 		const scheduledDiff = scheduled - now;
-
+        
 		if (predictedTime == 0) {
 			return Math.abs(Math.floor(scheduledDiff / 60000));
 		} else {
@@ -24,6 +38,26 @@
 		}
 	}
 
+    // Format time for display
+    function formatTime(date) {
+    return date.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        second: '2-digit',  // Add this line to show seconds
+        hour12: true 
+    });
+}
+
+    // Format date for display
+    function formatDate(date) {
+        return date.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+
+    // Check if the departure is coming soon (within minutes) or if it's a scheduled time
     function isComingSoon(predictedTime, scheduledTime) {
         const minutes = getArrivalStatus(predictedTime, scheduledTime);
         return minutes <= 10; // Show minutes if 10 or fewer minutes away
@@ -39,6 +73,7 @@
         });
     }
 
+    // Fetch stop information using the OneBusAway API
     async function fetchStopInfo(id) {
         try {
             const response = await fetch(`api/oba/stops`);
@@ -57,6 +92,7 @@
         }
     }
 
+    // Fetch departures for the stop
     async function fetchDepartures(id = stopCode) {
         loading = true;
         try {
@@ -73,6 +109,8 @@
 
     onMount(async () => {
         if (browser) {
+            startClock();
+            // Fetch stop information and then departures
             await fetchStopInfo(stopCode);
             await fetchDepartures();
         }
@@ -91,8 +129,10 @@
 				</a>
 			</div>
 		</div>
-		<h2 class="flex-1 self-center text-2xl">Departures</h2>
-		<div class="self-center">current time here</div>
+        <div class="text-right">
+            <div class="text-sm">{formatDate(currentDate)}</div>
+            <div class="text-3xl font-bold">{formatTime(currentTime)}</div>
+        </div>
 	</div>
 
     <!-- Main content -->
@@ -133,6 +173,7 @@
         {/if}
     </div>
 
+    <!-- Footer -->
     <div class="bg-gray-300 p-3 text-black">
         <div class="flex justify-between items-center">
             <div class="flex items-center">
