@@ -3,7 +3,7 @@ import { stopIDs } from '$lib/dataStore';
 import { json } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
-export async function GET({ params }) {
+export async function GET() {
 	const stopID = stopIDs()[0];
 	const response = await oba.stop.retrieve(stopID);
 	return json({
