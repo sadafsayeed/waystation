@@ -12,6 +12,19 @@ export function formatTime(date) {
 }
 
 /**
+ * Format time for display
+ * @param {Date} time
+ */
+export function formatTime2(time) {
+	const date = new Date(time);
+	return date.toLocaleTimeString('en-US', {
+		hour: 'numeric',
+		minute: '2-digit',
+		hour12: true
+	});
+}
+
+/**
  * Format date for display
  * @param {Date} date
  */
@@ -20,5 +33,18 @@ export function formatDate(date) {
 		weekday: 'long',
 		month: 'long',
 		day: 'numeric'
+	});
+}
+
+/**
+ * Format the current time for display
+ * @param {Date} date
+ */
+export function formatCurrentTime(date) {
+	return date.toLocaleTimeString('en-US', {
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+		hour12: true
 	});
 }
