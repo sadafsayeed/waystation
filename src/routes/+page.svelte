@@ -1,8 +1,8 @@
 <script>
 	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { PUBLIC_OBA_LOGO_URL, PUBLIC_OBA_REGION_NAME } from '$env/static/public';
-	import { formatDate, formatTime2, formatCurrentTime } from '$lib/formatters';
+	import { formatTime2 } from '$lib/formatters';
 
 	import Header from '$components/navigation/header.svelte';
 	import Footer from '$components/navigation/footer.svelte';
@@ -10,7 +10,10 @@
 
 	let arrivalsAndDepartures = $state([]);
 	let loading = $state(true);
-	let currentDateTime = $state(new Date());
+	let now = $state(new Date());
+	const refreshInterval = 30; // Refresh every 30 seconds
+	let countdown = $state(refreshInterval);
+	let intervalTimer;
 
 	// Get status for arrival or departure
 	function getArrivalStatus(predictedTime, scheduledTime) {
@@ -73,31 +76,35 @@
 		}
 	}
 
-	// Update current time every second
-	function updateTime() {
-		currentDateTime = new Date();
-		setTimeout(updateTime, 1000);
-	}
-
 	onMount(async () => {
 		if (browser) {
 			await fetchDepartures();
-			updateTime();
 
-			// Refresh departures every 30 seconds
-			const interval = setInterval(fetchDepartures, 30000);
-			return () => clearInterval(interval);
+			intervalTimer = setInterval(async () => {
+				now = new Date();
+				countdown -= 1;
+
+				// When the counter reaches zero, fetch new departures and reset the counter
+				if (countdown <= 0) {
+					countdown = refreshInterval;
+					await fetchDepartures();
+				}
+			}, 1000);
 		}
+	});
+
+	onDestroy(() => {
+		clearInterval(intervalTimer);
 	});
 </script>
 
 <div class="flex h-screen flex-col">
-	<Header title={PUBLIC_OBA_REGION_NAME} imageUrl={PUBLIC_OBA_LOGO_URL}>
-		<div slot="right" class="text-right">
-			<div class="text-sm text-gray-600">{formatDate(currentDateTime)}</div>
-			<div class="text-xl font-bold">{formatCurrentTime(currentDateTime)}</div>
-		</div>
-	</Header>
+	<Header
+		title={PUBLIC_OBA_REGION_NAME}
+		imageUrl={PUBLIC_OBA_LOGO_URL}
+		currentDate={now}
+		{countdown}
+	/>
 
 	<div class="flex-1 bg-gray-200 text-black">
 		{#if loading}
