@@ -25,8 +25,12 @@ test('renders successfully with departure data', async () => {
 		displayTime: '10:30 AM'
 	};
 
+	const routeStatus = {
+		status: "ON TIME"
+	};
+
 	render(Departure, {
-		props: { dep, status },
+		props: { dep, status, routeStatus },
 		target: div
 	});
 
