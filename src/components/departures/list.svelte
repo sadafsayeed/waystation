@@ -2,15 +2,18 @@
 	import { formatArrivalStatus } from '$lib/formatters';
 	import Departure from '$components/departures/Departure.svelte';
 
+	let { stopID } = $props();
+
 	let arrivalsAndDepartures = $state([]);
 	let loading = $state(true);
 
 	export async function fetchDepartures() {
 		loading = true;
 		try {
-			const response = await fetch(`/api/oba/departures`);
+			const response = await fetch(`/api/oba/arrivals-and-departures-for-stop/${stopID}`);
 			if (!response.ok) throw new Error('Failed to fetch departures');
-			arrivalsAndDepartures = await response.json();
+			const responseBody = await response.json();
+			arrivalsAndDepartures = responseBody.data.entry.arrivalsAndDepartures;
 		} catch (error) {
 			console.error('Error fetching departures:', error);
 			arrivalsAndDepartures = [];
@@ -27,8 +30,8 @@
 		</div>
 	{:else if arrivalsAndDepartures.length > 0}
 		<div class="flex flex-col divide-y divide-gray-300">
-			{#each arrivalsAndDepartures as dep (dep.scheduledDepartureTime, dep.tripId)}
-				{#if formatArrivalStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime)}
+			{#each arrivalsAndDepartures as dep}
+				{#if formatArrivalStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime, dep.vehicleId)}
 					<Departure
 						{dep}
 						status={formatArrivalStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime)}

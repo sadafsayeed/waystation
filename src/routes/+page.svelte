@@ -1,41 +1,27 @@
 <script>
-	import { PUBLIC_OBA_LOGO_URL, PUBLIC_OBA_REGION_NAME } from '$env/static/public';
-
-	import Header from '$components/navigation/header.svelte';
-	import Footer from '$components/navigation/footer.svelte';
-	import Countdown from '$components/countdown.svelte';
-	import DepartureList from '$components/departures/list.svelte';
-	import { onMount } from 'svelte';
-
-	let now = $state(new Date());
-	let countdown = $state(0);
-	let departureList;
-
-	async function timerElapsed() {
-		await departureList.fetchDepartures();
-	}
-
-	function tick(counter, date) {
-		now = date;
-		countdown = counter;
-	}
-
-	onMount(async () => {
-		await departureList.fetchDepartures();
-	});
+	let { data } = $props();
+	let agencies = data.agencies;
 </script>
 
-<Countdown refreshInterval={30} {tick} {timerElapsed} />
-
-<div class="flex h-screen flex-col">
-	<Header
-		title={PUBLIC_OBA_REGION_NAME}
-		imageUrl={PUBLIC_OBA_LOGO_URL}
-		currentDate={now}
-		{countdown}
-	/>
-
-	<DepartureList bind:this={departureList} />
-
-	<Footer />
-</div>
+<main>
+	<table>
+		<thead>
+			<tr>
+				<th> ID </th>
+				<th> Name </th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each agencies as agency (agency.id)}
+				<tr>
+					<td>
+						{agency.id}
+					</td>
+					<td>
+						<a href="/agencies/{agency.id}" class="text-blue-600">{agency.name}</a>
+					</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</main>
