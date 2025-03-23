@@ -17,7 +17,6 @@ Waystation is the next-generation [Sign Mode](https://developer.onebusaway.org/f
 - `PUBLIC_OBA_REGION_NAME` string: (required) displayed in the header.
 - `PUBLIC_OBA_SERVER_URL` string: (required) Your OBA API server's URL.
 - `PRIVATE_OBA_API_KEY` string: (required) Your OneBusAway REST API server key.
-- `PRIVATE_DEPARTURES` array: (required) Unique identifier for a transit stop.
 
 ## Development
 
@@ -37,7 +36,6 @@ To get started, set up Waystation for local development:
    PUBLIC_OBA_REGION_NAME="Sound Transit"
    PUBLIC_OBA_SERVER_URL="https://api.pugetsound.onebusaway.org/"
    PRIVATE_OBA_API_KEY="test"
-   PRIVATE_DEPARTURES=[{"stopID": "1_19750", "routeIDs": ["1_102576"]}]
    ```
 
 2. **Run the Development Server** - Launch Waystation locally:
