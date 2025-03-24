@@ -32,13 +32,13 @@
 			<div class="mx-3 text-4xl text-gray-400">|</div>
 		{:else if status.minutes !== null}
 			{#if routeStatus.status === 'LATE'}
-				<div class="rounded-sm bg-red-500 text-white px-2 py-2">
+				<div class="rounded-sm bg-red-500 px-2 py-2 text-white">
 					{routeStatus.status}
 				</div>
 			{:else}
-			<div class="rounded-sm bg-green-500 text-white px-2 py-2">
-				{routeStatus.status}
-			</div>
+				<div class="rounded-sm bg-green-500 px-2 py-2 text-white">
+					{routeStatus.status}
+				</div>
 			{/if}
 			<div class="mx-3 text-4xl text-gray-400">|</div>
 			<div class="mr-3 flex items-center">

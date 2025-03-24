@@ -26,7 +26,7 @@ test('renders successfully with departure data', async () => {
 	};
 
 	const routeStatus = {
-		status: "ON TIME"
+		status: 'ON TIME'
 	};
 
 	render(Departure, {

@@ -58,14 +58,13 @@ export function formatArrivalStatus(predictedTime, scheduledTime) {
 }
 
 // Check if the vehicle is departing late or on time
-export function formatRouteStatus(predictedTime, scheduledTime){
-	if(predictedTime>scheduledTime){
-		return{
+export function formatRouteStatus(predictedTime, scheduledTime) {
+	if (predictedTime > scheduledTime) {
+		return {
 			status: 'LATE'
 		};
-	}
-	else{
-		return{
+	} else {
+		return {
 			status: 'ON TIME'
 		};
 	}
