@@ -1,5 +1,10 @@
 <script>
-	const { dep, status, routeStatus } = $props();
+	import { formatArrivalStatus, formatRouteStatus } from '$lib/formatters';
+	const {dep} = $props();
+
+	const status = formatArrivalStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime);
+	const routeStatus = formatRouteStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime);
+
 </script>
 
 <div class="flex items-center p-5">
@@ -10,6 +15,8 @@
 	<div class="flex-1 text-xl">
 		{dep.tripHeadsign}
 	</div>
+
+	
 
 	<div class="flex items-center">
 		{#if status.status === 'Departing'}
@@ -29,18 +36,13 @@
 				</svg>
 				<span class="text-xl font-bold {status.color}">{status.text}</span>
 			</div>
-			<div class="mx-3 text-4xl text-gray-400">|</div>
+			<div class="mx-3 h-9 border-l-3 border-gray-400"></div>
 		{:else if status.minutes !== null}
-			{#if routeStatus.status === 'LATE'}
-				<div class="rounded-sm bg-red-500 px-2 py-2 text-white">
-					{routeStatus.status}
-				</div>
-			{:else}
-				<div class="rounded-sm bg-green-500 px-2 py-2 text-white">
-					{routeStatus.status}
-				</div>
-			{/if}
-			<div class="mx-3 text-4xl text-gray-400">|</div>
+			<div class="rounded-sm {routeStatus.color} px-2 py-2 text-white text-center">
+				{routeStatus.status}
+			</div>
+			<div class="mx-3 h-9 border-l-3 border-gray-400"></div>
+
 			<div class="mr-3 flex items-center">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +61,7 @@
 				<span class="mx-2 text-4xl font-bold {status.color}">{status.minutes}</span>
 				<span class="text-lg {status.color}">min</span>
 			</div>
-			<div class="mx-3 text-4xl text-gray-400">|</div>
+			<div class="mx-3 h-9 border-l-3 border-gray-400"></div>
 		{/if}
 		<div>
 			<span class="text-4xl font-bold text-black">{status.displayTime}</span>
