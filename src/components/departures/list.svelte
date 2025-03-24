@@ -34,8 +34,6 @@
 				{#if formatArrivalStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime)}
 					<Departure
 						{dep}
-						status={formatArrivalStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime)}
-						routeStatus={formatRouteStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime)}
 					/>
 				{/if}
 			{/each}
