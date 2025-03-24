@@ -1,5 +1,5 @@
 <script>
-	import { formatArrivalStatus, formatRouteStatus } from '$lib/formatters';
+	import { formatArrivalStatus } from '$lib/formatters';
 	import Departure from '$components/departures/Departure.svelte';
 
 	let { stopID } = $props();
@@ -32,9 +32,7 @@
 		<div class="flex flex-col divide-y divide-gray-300">
 			{#each arrivalsAndDepartures as dep ((dep.predictedDepartureTime, dep.scheduledDepartureTime, dep.vehicleId))}
 				{#if formatArrivalStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime)}
-					<Departure
-						{dep}
-					/>
+					<Departure {dep} />
 				{/if}
 			{/each}
 		</div>

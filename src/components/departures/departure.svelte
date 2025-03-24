@@ -1,10 +1,9 @@
 <script>
 	import { formatArrivalStatus, formatRouteStatus } from '$lib/formatters';
-	const {dep} = $props();
+	const { dep } = $props();
 
 	const status = formatArrivalStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime);
 	const routeStatus = formatRouteStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime);
-
 </script>
 
 <div class="flex items-center p-5">
@@ -15,8 +14,6 @@
 	<div class="flex-1 text-xl">
 		{dep.tripHeadsign}
 	</div>
-
-	
 
 	<div class="flex items-center">
 		{#if status.status === 'Departing'}
@@ -38,7 +35,7 @@
 			</div>
 			<div class="mx-3 h-9 border-l-3 border-gray-400"></div>
 		{:else if status.minutes !== null}
-			<div class="rounded-sm {routeStatus.color} px-2 py-2 text-white text-center">
+			<div class="rounded-sm {routeStatus.color} px-2 py-2 text-center text-white">
 				{routeStatus.status}
 			</div>
 			<div class="mx-3 h-9 border-l-3 border-gray-400"></div>
