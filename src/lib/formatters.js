@@ -59,7 +59,7 @@ export function formatArrivalStatus(predictedTime, scheduledTime) {
 
 // Check if the vehicle is departing late or on time
 export function formatRouteStatus(predictedTime, scheduledTime) {
-	if (typeof predictedTime === "undefined"|| predictedTime === null || predictedTime === 0){
+	if (typeof predictedTime === 'undefined' || predictedTime === null || predictedTime === 0) {
 		return {
 			status: 'UNKNOWN',
 			color: 'text-gray-500'
@@ -72,17 +72,17 @@ export function formatRouteStatus(predictedTime, scheduledTime) {
 	if (diff < -1) {
 		return {
 			status: 'EARLY',
-			color: "bg-green-500"
+			color: 'bg-green-500'
 		};
-	} else if (diff>1){
+	} else if (diff > 1) {
 		return {
 			status: 'LATE',
-			color: "bg-red-500"
+			color: 'bg-red-500'
 		};
-	} else{
+	} else {
 		return {
 			status: 'ON TIME',
-			color: "bg-blue-500"
+			color: 'bg-blue-500'
 		};
 	}
 }
