@@ -1,5 +1,9 @@
 <script>
-	const { dep, status } = $props();
+	import { formatArrivalStatus, formatRouteStatus } from '$lib/formatters';
+	const { dep } = $props();
+
+	const status = formatArrivalStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime);
+	const routeStatus = formatRouteStatus(dep.predictedDepartureTime, dep.scheduledDepartureTime);
 </script>
 
 <div class="flex items-center p-5">
@@ -29,8 +33,13 @@
 				</svg>
 				<span class="text-xl font-bold {status.color}">{status.text}</span>
 			</div>
-			<div class="mx-3 text-4xl text-gray-400">|</div>
+			<div class="mx-3 h-9 border-l-3 border-gray-400"></div>
 		{:else if status.minutes !== null}
+			<div class="rounded-sm {routeStatus.color} px-2 py-2 text-center text-white">
+				{routeStatus.status}
+			</div>
+			<div class="mx-3 h-9 border-l-3 border-gray-400"></div>
+
 			<div class="mr-3 flex items-center">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +58,7 @@
 				<span class="mx-2 text-4xl font-bold {status.color}">{status.minutes}</span>
 				<span class="text-lg {status.color}">min</span>
 			</div>
-			<div class="mx-3 text-4xl text-gray-400">|</div>
+			<div class="mx-3 h-9 border-l-3 border-gray-400"></div>
 		{/if}
 		<div>
 			<span class="text-4xl font-bold text-black">{status.displayTime}</span>

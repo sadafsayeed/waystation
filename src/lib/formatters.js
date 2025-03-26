@@ -57,6 +57,36 @@ export function formatArrivalStatus(predictedTime, scheduledTime) {
 	}
 }
 
+// Check if the vehicle is departing late or on time
+export function formatRouteStatus(predictedTime, scheduledTime) {
+	if (typeof predictedTime === 'undefined' || predictedTime === null || predictedTime === 0) {
+		return {
+			status: 'UNKNOWN',
+			color: 'text-gray-500'
+		};
+	}
+	const predicted = new Date(predictedTime);
+	const scheduled = new Date(scheduledTime);
+	const diff = Math.floor((predicted - scheduled) / 60000);
+
+	if (diff < -1) {
+		return {
+			status: 'EARLY',
+			color: 'bg-green-500'
+		};
+	} else if (diff > 1) {
+		return {
+			status: 'LATE',
+			color: 'bg-red-500'
+		};
+	} else {
+		return {
+			status: 'ON TIME',
+			color: 'bg-blue-500'
+		};
+	}
+}
+
 /**
  * Format time for display
  * @param {Date} time
